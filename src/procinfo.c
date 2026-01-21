@@ -22,6 +22,7 @@ int main(int c,char**v){
     return 1;
   }
 
+  //HMMM
   fclose(f);
 
   char *tokens[100];

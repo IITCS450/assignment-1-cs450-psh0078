@@ -11,19 +11,18 @@ int main(int c,char**v){
 
   char path[64];
   snprintf(path, sizeof(path), "/proc/%d/stat", pid);
+  FILE *f1 = fopen(path, "r");
 
-  FILE *f = fopen(path, "r");
-  if (!f) return 1;
+  snprintf(path, sizeof(path), "/proc/%d/cmdline", pid);
+  FILE *f2 = fopen(path, "r");
 
   char buf[4096];
-  if (fgets(buf, sizeof(buf), f) == NULL) {
+  if (fgets(buf, sizeof(buf), f1) == NULL) {
     perror("fgets");
-    fclose(f);
+    fclose(f1);
     return 1;
   }
-
-  //HMMM
-  fclose(f);
+  fclose(f1);
 
   char *tokens[100];
   int count = 0;
@@ -39,5 +38,9 @@ int main(int c,char**v){
     token = strtok(NULL, " \t\n");
   }
 
+  printf("PID:%s\n", tokens[0]);
+  printf("State:%s\n", tokens[2]);
+  printf("PPID:%s\n", tokens[3]);
+  printf("Cmd:%s\n", fgets(buf, sizeof(buf), f2));
   return 0;
 }
